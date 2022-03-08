@@ -1,32 +1,16 @@
 import {FC }from 'react';
 import styled from 'styled-components';
+import { GameBoard } from './GameBoard'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate
+} from "react-router-dom";
 
-const StyledApp = styled.div`
-  display: flex;
-  flex: 1;
-  background-color: white;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-`;
 
-const Square = styled.div`
-  display: flex;
-  align-items: center;
-  font-size: 20px; 
-  font-weight: 600;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  margin: 5px;
-  background-color: #f2f0e6;
-  color: black; 
-  border-radius: 5px;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  &:hover {
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-  }
-`;
+
+
 
 const Header = styled.div`
   width: 100%;
@@ -35,29 +19,45 @@ const Header = styled.div`
   color: black;
   background-color: #f2f0e6;
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+`;
 
-  // border-bottom: solid 1px black;
+const Credit = styled.a`
+  font-size: 10px; 
 `;
 
 
-const randomLetter = () => {
-  // function randomIntFromInterval(min, max) { // min and max included 
-  const letter =  Math.floor(Math.random() * 27)
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-  return characters.charAt(letter)
 
+const randomLetter = (x:number, y:number) => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  const randomCharacter = characters[Math.floor(Math.random() * characters.length)]
+  return randomCharacter
 }
 
 export const App:FC = () => {
   return (
     <>
       <Header>Fire Words</Header>
-    <StyledApp>
-      {Array.from(Array(5).keys()).map( (index: number) => <div style={{  marginTop: index % 2 === 0 ? 25 : 0}} > 
-        {Array.from(Array(index % 2 === 0 ? 5 : 6).keys()).map( (index: number) =>  <Square> <div>{randomLetter()}</div> </Square> )  }
 
-      </div>  )  }
-    </StyledApp>
+      <Router>
+        <Routes>
+          <Route path='/' element={ <GameBoard />}
+          
+          />
+          <Route path='/credits' element={ 
+                <>
+                Resources:
+                  <Credit href="https://www.flaticon.com/free-icons/letters-abc" title="letters abc icons">Letters abc icons created by mynamepong - Flaticon</Credit>
+                  <Credit href="https://www.macworld.com/article/196032/firewords.html" title="letters abc icons">This game was base on the orginal Fire Words</Credit>
+                </>
+          } />
+              <Route
+                path="*"
+                element={<Navigate to="/" />}
+            />
+
+        </Routes>
+      </Router>
+
     </>
   );
 }
