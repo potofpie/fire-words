@@ -1,6 +1,8 @@
 import {FC }from 'react';
 import styled from 'styled-components';
 import { GameBoard } from './GameBoard'
+import { useGameData} from './context/gameDataContext'
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -26,14 +28,8 @@ const Credit = styled.a`
 `;
 
 
-
-const randomLetter = (x:number, y:number) => {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-  const randomCharacter = characters[Math.floor(Math.random() * characters.length)]
-  return randomCharacter
-}
-
 export const App:FC = () => {
+  const  { selected, score } = useGameData()!
   return (
     <>
       <Header>Fire Words</Header>
