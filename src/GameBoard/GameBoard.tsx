@@ -1,13 +1,19 @@
+
 import {FC }from 'react';
 import styled from 'styled-components';
-import { useGameData} from '../context/gameDataContext'
 
+import {
+  AiFillCloseCircle,
+  AiFillCheckCircle 
+} from 'react-icons/ai'
+
+import { useGameData, Column, Position} from '../context/gameDataContext'
 
 
 
 const Header = styled.div`
   display: flex;
-  margin: 10px;
+  flex: 1;
   flex-direction: column;
   align-text: center;
   align-items: center;
@@ -16,38 +22,24 @@ const Header = styled.div`
 
 const Footer = styled.div`
   display: flex;
-  margin: 15px;
+  flex: 1;
   width: 100%;
-  flex-direction: row;
-  align-text: center;
-  justify-content: space-around;
-
-
-  align-items: center;
-  justify-content: space-around;
+  flex-direction: column;
+  justify-content: center;
 `;
 const WordText = styled.div`
+  display: flex;
   background-color: #f2f0e6;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   border-radius: 10px;
   margin: 7px;
   padding: 7px;
-  flex-direction: column;
-  align-text: center;
-  align-items: center;
-  justify-content: space-around;
-`;
-
-const Score = styled.div`
-  display: flex;
-  flex: 1;
-  background-color: white;
   flex-direction: row;
   align-text: center;
-
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
 `;
+
 
 const StyledGameBoard = styled.div`
   display: flex;
@@ -76,6 +68,28 @@ const Square = styled.div`
   }
 `;
 
+const IconCheckButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 5px; 
+  color: green;
+  &:hover {
+    color: darkgreen; 
+  }
+`;
+
+const IconCrossButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 5px; 
+  color: red;
+  &:hover {
+    color: #8b0000; 
+  }
+`;
+
 const DebugPos = styled.div`
   width: 100%;
   font-size: 8px; 
@@ -91,67 +105,55 @@ const randomLetter = (x:number, y:number) => {
 }
 
 
-interface Position {
-    x: number;
-    y: number;
-}
 
 interface LetterTileProps {
     pos: Position;
 }
 
 const LetterTile:FC<LetterTileProps> = ({pos}) => {
-    const  { selected, score, appendTile } = useGameData()!
-    const letter = randomLetter(pos.x, pos.y)
+    const  { appendTile, debug } = useGameData()!
     return (
-        <Square key={`${pos.x}, ${pos.y}`} onClick={() => appendTile(letter) }> 
-            <div>{letter}</div> 
-            {/* <DebugPos> {`${pos.x}, ${pos.y}`} </DebugPos>  */}
+        <Square key={`${pos.x}, ${pos.y}`} onClick={() => appendTile(pos?.letter) }> 
+            <div>{pos?.letter}</div> 
+            {debug ? <DebugPos> {`${pos.x}, ${pos.y}`} </DebugPos>  : <></> }
+             
         </Square>   
 
     )
 
 }
 
-const rows = Array.from(Array(5).keys())
-const longCol = Array.from(Array(7).keys())
-const shortCol = Array.from(Array(6).keys())
+// const rows = Array.from(Array(5).keys())
+// const longCol = Array.from(Array(7).keys())
+// const shortCol = Array.from(Array(6).keys())
 
 
 
 export const GameBoard:FC = () => {
-    const  { selected, score, clearTitles } = useGameData()!
+    const  { selected, score, clearTitles, gameBoardState  } = useGameData()!
 
     return (
     <>
-            <Header>
-            {selected.length ?  <WordText>{selected.join("")}</WordText> : <div style={{margin: 10,height: 33.5}}/>  }
-            </Header>
+        <Header>
+          {selected.length ?  
+            <WordText>
+              <IconCheckButton onClick={() => {console.log(selected.join("")); clearTitles();}  } ><AiFillCheckCircle/></IconCheckButton>
+              {selected.join("")}
+              <IconCrossButton onClick={() => clearTitles() } ><AiFillCloseCircle/></IconCrossButton>
+            </WordText>  :  <div style={{margin: 10,height: 33.5}}/>    }
+        </Header>
 
         <StyledGameBoard key='gameboard'>
-
-
-            
-            {rows.map( (xIndex: number) => 
-            <div style={{  marginTop: xIndex % 2 === 0 ? 25 : 0}} > 
-                {
-                    xIndex % 2 !== 0 ? 
-                    longCol.map( (yIndex: number) =>  <LetterTile pos={{x: xIndex, y: yIndex} as Position} />) 
-                    : 
-                    shortCol.map( (yIndex: number) =>  <LetterTile pos={{x: xIndex, y: yIndex} as Position} />)
-                    
-                }
-            
-            </div>  
+            {gameBoardState?.columns?.map( 
+              (col: Column) =>
+                <div style={{  marginTop: gameBoardState?.columns?.length % 2 === 0 ? 25 : 0}} >
+                  {col.points.map((point: Position) => <LetterTile pos={point} />) }
+                </div>  
             )  }
         </StyledGameBoard>
-
-
-            <Footer>
-                <button> enter </button>
-                <div> {score} </div>
-                <button onClick={() => clearTitles()}> clear</button>
-            </Footer>
+        <Footer>
+            <div> {score} </div>
+        </Footer>
     </>
     );
 }

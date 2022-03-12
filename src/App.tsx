@@ -29,14 +29,14 @@ const Credit = styled.a`
 
 
 export const App:FC = () => {
-  const  { selected, score } = useGameData()!
+  const  { gameBoardState } = useGameData()!
   return (
     <>
       <Header>Fire Words</Header>
 
       <Router>
         <Routes>
-          <Route path='/' element={ <GameBoard />}
+          <Route path='/' element={ gameBoardState ? <GameBoard /> : <></>}
           
           />
           <Route path='/credits' element={ 
