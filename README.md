@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="public/logo192.png" alt="angular-logo" width="120px" height="120px"/>
+</p>
+
 # fire words
 A clone of a old iPhone app from 2008-2009 as a mothers day gift. 
 
