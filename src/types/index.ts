@@ -7,7 +7,8 @@ export type Word = {
   word: string;
 };
 
-  
+
+export type WordValidationState =  "error" | "idle" | "success"
 export interface Position {
   x: number,
   y: number
@@ -21,4 +22,6 @@ export interface Column {
 export interface GameBoardState {
   columns: Column[]
 }
+
+
 

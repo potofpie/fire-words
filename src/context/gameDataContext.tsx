@@ -1,17 +1,24 @@
-import { FC, useState, useContext, createContext } from "react";
-import {Position, Column,GameBoardState} from '../types'
-import { randomLetter } from '../utils'
-import { ROWS_COUNT, LONG_COLUMN_COUNT,SHORT_COLUMN_COUNT, LONG_COLUMN_INDEXES } from '../constants'
+import { FC, useState, useContext, createContext, useEffect } from "react";
+import {Position, Column,GameBoardState, WordValidationState} from '../types'
+import { randomLetter, validateWord } from '../utils'
+import { ROWS_COUNT, LONG_COLUMN_COUNT,SHORT_COLUMN_COUNT, LONG_COLUMN_INDEXES, DEBUG } from '../constants'
+import {
+  useQuery,
+  QueryStatus
+} from "react-query";
 
 
 
 export interface GameDataContextProps {
-  debug: boolean;
   selected: any,
+  selectedWord: string,
   score: any
-  appendTile: Function,
-  clearTitles: Function
+  wordValidationState: WordValidationState,
   gameBoardState: GameBoardState,
+  appendTile: Function,
+  clearTile: Function,
+  checkWordLength: Function,
+  DEBUG: boolean,
   ROWS_COUNT: number[],
   LONG_COLUMN_COUNT: number[],
   SHORT_COLUMN_COUNT: number[]
@@ -34,11 +41,32 @@ const generateGameState = () => {
 
 export const GameDataContext = createContext<GameDataContextProps| undefined >(undefined);
 export const GameDataProvider:FC = ({ children }) => {
-  
   const [gameBoardState, setGameBoardState] = useState<any>(generateGameState())!
+  const [wordValidationState, setWordValidationState] = useState<WordValidationState>('idle')!
   const [selected, setSelected] = useState<any>([])!
-
   const [score, setScore] = useState<any>(100)!
+
+
+
+  
+
+  const checkWordLength = () => {
+    if(selected?.length < 3){
+      setWordValidationState('error')
+      setTimeout( () => {
+        setWordValidationState('idle')
+        clearTile();
+      }, 500);
+    }
+    else{
+      console.log(selected.map((pos: Position) => pos.letter).join(""));
+      validateWord(
+        selected.map((pos: Position) => pos.letter).join(""),
+        setWordValidationState,
+        clearTile
+      );
+    }
+  }
 
 
   const valiateConnection = (prevState: any, value: Position) => {
@@ -72,17 +100,23 @@ export const GameDataProvider:FC = ({ children }) => {
     )
 
   } 
-  const clearTitles = () => {
+  const clearTile = () => {
     setSelected([])
   } 
 
   return (
     <GameDataContext.Provider value={{ 
-        debug: true,
-        selected, 
+        selected,
+        // status: wordValidationState,
+        selectedWord: selected.map((pos: Position) => pos.letter).join(""), 
         score, 
+
+        checkWordLength,
         appendTile, 
-        clearTitles,
+        clearTile,
+        wordValidationState,
+
+        DEBUG,
         gameBoardState,
         ROWS_COUNT,
         SHORT_COLUMN_COUNT,

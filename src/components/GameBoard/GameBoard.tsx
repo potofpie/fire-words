@@ -1,17 +1,27 @@
-import {FC, useState }from 'react';
+import {FC, useState, useEffect }from 'react';
 import HeadShake from 'react-reveal/HeadShake';
+import Tada from 'react-reveal/Tada';
+
 import { useSpring } from "react-spring";
 import {
   AiFillCloseCircle,
   AiFillCheckCircle 
 } from 'react-icons/ai'
 import { useGameData } from '../../context/gameDataContext'
-import { Column, Position} from '../../types'
-import { getWord } from '../../utils'
-
-import {Header, Footer, IconCheckButton, IconCrossButton, AnimatedSquare, DebugPos, WordText, StyledGameBoard} from '../../styled'
+import { Column, Position, WordValidationState} from '../../types'
+import { isTileSelected } from '../../utils'
 import {
-  useQuery,
+  Header, 
+  Footer, 
+  IconCheckButton, 
+  IconCrossButton, 
+  AnimatedSquare, 
+  DebugPos, 
+  WordText, 
+  StyledGameBoard
+} from '../../styled'
+import {
+  QueryStatus
 } from "react-query";
 
 
@@ -19,12 +29,29 @@ import {
 
 
 
-const determineColor = ({selected, error}: {selected: Boolean, error: Boolean}) => {
-  if(error){
+
+const determineBackgroundColor = (
+  {
+    selected, 
+    error, 
+    wordValidationState
+  }
+    : 
+    {
+      selected: Boolean, 
+      error: Boolean, 
+      wordValidationState: WordValidationState
+    }
+  ) => {
+    // console.log(wordValidation, selected)
+  if(error || (wordValidationState === 'error' && selected) ) {
     return "#e8ccd7"
   }
-  else if(selected){
-    return "#c4d8e2"
+  else if(wordValidationState === 'success' && selected){
+    return "#e9ffdb"
+  }
+  else if(wordValidationState === 'idle' && selected){
+    return "#f2f0e6" //"#c4d8e2"
   }
   else{
     return "#f2f0e6"
@@ -33,6 +60,7 @@ const determineColor = ({selected, error}: {selected: Boolean, error: Boolean}) 
 
 interface LetterTileProps {
   pos: Position;
+  // status?: WordValidationState;
 }
 
 
@@ -40,28 +68,31 @@ interface LetterTileProps {
 
 
 
-const LetterTile:FC<LetterTileProps> = ({pos}) => {
-
+const LetterTile:FC<LetterTileProps> = ({pos, /*status*/}) => {
   const [error, setError] = useState<Boolean>(false);
-  const  { selected, appendTile, debug } = useGameData()!
-  const  tileSelected = selected?.filter((selectedPos: Position) => selectedPos.x === pos.x && selectedPos.y === pos.y)?.length
+  const  { selected, appendTile, wordValidationState, DEBUG } = useGameData()!
+  const  tileSelected = isTileSelected({pos,selected}) 
+  const colorFade = useSpring( 
+    {
+      backgroundColor:  determineBackgroundColor({error, selected: tileSelected, wordValidationState }),
+      border: tileSelected ? 'solid 3px #e9d66b' : 'solid 3px #f2f0e6'
+    } 
+  )
 
 
-
-  const colorFade = useSpring({
-    backgroundColor:  determineColor({error, selected: tileSelected })
-  })
 
 
   return (
     
-    <HeadShake when={error} >
-      <AnimatedSquare style={colorFade} key={`${pos.x}, ${pos.y}`} onClick={() => appendTile(pos, setError) }> 
-          <div>{pos?.letter}</div> 
-          {debug ? <DebugPos> {`${pos.x}, ${pos.y}`} </DebugPos>  : <></> }
-          
-      </AnimatedSquare>
-    </HeadShake>
+    <Tada when={wordValidationState === 'success' && tileSelected} >
+      <HeadShake when={ error || (wordValidationState === 'error' && tileSelected)} >
+        <AnimatedSquare style={colorFade} key={`${pos.x}, ${pos.y}`} onClick={() => appendTile(pos, setError) }> 
+            <div>{pos?.letter}</div> 
+            {DEBUG ? <DebugPos> {`${pos.x}, ${pos.y}`} </DebugPos>  : <></> }
+            
+        </AnimatedSquare>
+      </HeadShake>
+    </Tada>
   
 
   )
@@ -72,14 +103,10 @@ const LetterTile:FC<LetterTileProps> = ({pos}) => {
 export const GameBoard:FC = () => {
   // const { status, data, error, isFetching } = useWord();
 
-    const  { selected, score, clearTitles, gameBoardState  } = useGameData()!
-    const { /*status,*/ data, /* error, isFetching,*/ refetch } = useQuery(
-      ['word',selected.map((pos: Position) => pos.letter).join("")], 
-      () => getWord(selected.map((pos: Position) => pos.letter).join("")),
-      {
-        enabled: false,
-      }
-    );
+    const  { selected, selectedWord, score, clearTile, gameBoardState, /*status,*/ checkWordLength  } = useGameData()!
+
+
+
 
 
 
@@ -88,9 +115,11 @@ export const GameBoard:FC = () => {
         <Header>
           {selected.length ?  
             <WordText>
-              <IconCheckButton onClick={() => {console.log(selected.join("")); refetch(); clearTitles();  }} ><AiFillCheckCircle/></IconCheckButton>
-              {selected.map((pos: Position) => pos.letter).join("") }
-              <IconCrossButton onClick={() => clearTitles() } ><AiFillCloseCircle/></IconCrossButton>
+              <IconCheckButton onClick={() => checkWordLength()} ><AiFillCheckCircle/></IconCheckButton>
+
+              {selectedWord}
+              
+              <IconCrossButton onClick={() => clearTile() } ><AiFillCloseCircle/></IconCrossButton>
             </WordText>  :  <div style={{margin: 10,height: 33.5}}/>    }
         </Header>
 
@@ -98,14 +127,10 @@ export const GameBoard:FC = () => {
             {gameBoardState?.columns?.map( 
               (col: Column) =>
                 <div style={{  marginTop: gameBoardState?.columns?.length % 2 === 0 ? 25 : 0}} >
-                  {col.points.map((point: Position) => <LetterTile pos={point} />) }
+                  {col.points.map((point: Position) => <LetterTile /*status={ status }*/ pos={point} />) }
                 </div>  
             )  }
         </StyledGameBoard>
-        {
-          console.log(data)
-          // data?.map((t: Word) =>console.log(t.word))
-        }
         <Footer>
             <div> {score} </div>
         </Footer>
