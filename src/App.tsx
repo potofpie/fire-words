@@ -1,6 +1,6 @@
 import {FC }from 'react';
 import styled from 'styled-components';
-import { GameBoard } from './GameBoard'
+import { GameBoard } from './components'
 import { useGameData} from './context/gameDataContext'
 
 import {
@@ -12,9 +12,7 @@ import {
 
 
 
-
-
-const Header = styled.div`
+const AppHeader = styled.div`
   width: 100%;
   font-size: 18px; 
   padding: 10px; 
@@ -32,7 +30,7 @@ export const App:FC = () => {
   const  { gameBoardState } = useGameData()!
   return (
     <>
-      <Header>Fire Words</Header>
+      <AppHeader>Fire Words</AppHeader>
 
       <Router>
         <Routes>
@@ -41,7 +39,7 @@ export const App:FC = () => {
           />
           <Route path='/credits' element={ 
                 <>
-                Resources:
+                Credits:
                   <Credit href="https://www.flaticon.com/free-icons/letters-abc" title="letters abc icons">Letters abc icons created by mynamepong - Flaticon</Credit>
                   <Credit href="https://www.macworld.com/article/196032/firewords.html" title="letters abc icons">This game was base on the orginal Fire Words</Credit>
                 </>

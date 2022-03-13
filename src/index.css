@@ -14,11 +14,3 @@ html, body, #root {
 
 }
 
-.App {
-  display: flex;
-  flex: 1;
-  background-color: black;
-  flex-direction: row;
-
-}
-

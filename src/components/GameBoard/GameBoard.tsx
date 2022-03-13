@@ -1,13 +1,15 @@
-
-import {FC }from 'react';
+import {FC, useState }from 'react';
 import styled from 'styled-components';
-
+import HeadShake from 'react-reveal/HeadShake';
+import { useSpring, animated } from "react-spring";
 import {
   AiFillCloseCircle,
   AiFillCheckCircle 
 } from 'react-icons/ai'
 
-import { useGameData, Column, Position} from '../context/gameDataContext'
+import { useGameData } from '../../context/gameDataContext'
+import { Column, Position} from '../../types'
+import { checkWord } from '../../utils'
 
 
 
@@ -48,7 +50,7 @@ const StyledGameBoard = styled.div`
   justify-content: center;
 `;
 
-const Square = styled.div`
+const AnimatedSquare = styled(animated.div)`
   display: flex;
   align-items: center;
   flex-direction: row;
@@ -68,9 +70,30 @@ const Square = styled.div`
   }
 `;
 
+// const Square = styled.div`
+//   display: flex;
+//   align-items: center;
+//   flex-direction: row;
+//   font-size: 20px; 
+//   font-weight: 600;
+//   justify-content: center;
+//   width: 50px;
+//   height: 50px;
+//   margin: 5px;
+//   flex-direction: column;
+//   background-color: #f2f0e6;
+//   color: black; 
+//   border-radius: 5px;
+//   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+//   &:hover {
+//     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+//   }
+// `;
+
 const IconCheckButton = styled.div`
   display: flex;
   align-items: center;
+  font-size: 20px;
   justify-content: center;
   margin-right: 5px; 
   color: green;
@@ -82,6 +105,7 @@ const IconCheckButton = styled.div`
 const IconCrossButton = styled.div`
   display: flex;
   align-items: center;
+  font-size: 20px;
   justify-content: center;
   margin-left: 5px; 
   color: red;
@@ -98,34 +122,56 @@ const DebugPos = styled.div`
 
 
 
-const randomLetter = (x:number, y:number) => {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-  const randomCharacter = characters[Math.floor(Math.random() * characters.length)]
-  return randomCharacter
-}
-
 
 
 interface LetterTileProps {
-    pos: Position;
+  pos: Position;
+}
+
+interface LetterTileProps {
+  pos: Position;
+}
+
+
+const determineColor = ({selected, error}: {selected: Boolean, error: Boolean}) => {
+  if(error){
+    return "#e8ccd7"
+  }
+  else if(selected){
+    return "#c4d8e2"
+  }
+  else{
+    return "#f2f0e6"
+  }
+
+
 }
 
 const LetterTile:FC<LetterTileProps> = ({pos}) => {
-    const  { appendTile, debug } = useGameData()!
-    return (
-        <Square key={`${pos.x}, ${pos.y}`} onClick={() => appendTile(pos?.letter) }> 
-            <div>{pos?.letter}</div> 
-            {debug ? <DebugPos> {`${pos.x}, ${pos.y}`} </DebugPos>  : <></> }
-             
-        </Square>   
+  const [error, setError] = useState<Boolean>(false);
+  const  { selected, appendTile, debug } = useGameData()!
+  const  tileSelected = selected?.filter((selectedPos: Position) => selectedPos.x === pos.x && selectedPos.y === pos.y)?.length
 
-    )
+
+  const colorFade = useSpring({
+    backgroundColor:  determineColor({error, selected: tileSelected })
+  })
+
+
+  return (
+    
+    <HeadShake when={error} >
+      <AnimatedSquare style={colorFade} key={`${pos.x}, ${pos.y}`} onClick={() => appendTile(pos, setError) }> 
+          <div>{pos?.letter}</div> 
+          {debug ? <DebugPos> {`${pos.x}, ${pos.y}`} </DebugPos>  : <></> }
+          
+      </AnimatedSquare>
+    </HeadShake>
+  
+
+  )
 
 }
-
-// const rows = Array.from(Array(5).keys())
-// const longCol = Array.from(Array(7).keys())
-// const shortCol = Array.from(Array(6).keys())
 
 
 
@@ -137,8 +183,8 @@ export const GameBoard:FC = () => {
         <Header>
           {selected.length ?  
             <WordText>
-              <IconCheckButton onClick={() => {console.log(selected.join("")); clearTitles();}  } ><AiFillCheckCircle/></IconCheckButton>
-              {selected.join("")}
+              <IconCheckButton onClick={() => {console.log(selected.join("")); checkWord(selected.map((pos: Position) => pos.letter).join("")); clearTitles();}  } ><AiFillCheckCircle/></IconCheckButton>
+              {selected.map((pos: Position) => pos.letter).join("") }
               <IconCrossButton onClick={() => clearTitles() } ><AiFillCloseCircle/></IconCrossButton>
             </WordText>  :  <div style={{margin: 10,height: 33.5}}/>    }
         </Header>
