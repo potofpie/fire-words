@@ -1,2 +1,2 @@
-export * from './checkWord'
+export * from './getWord'
 export * from './randomLetter'

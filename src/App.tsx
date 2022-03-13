@@ -1,7 +1,7 @@
 import {FC }from 'react';
-import styled from 'styled-components';
 import { GameBoard } from './components'
 import { useGameData} from './context/gameDataContext'
+import { AppHeader, Credit } from './styled'
 
 import {
   BrowserRouter as Router,
@@ -12,18 +12,6 @@ import {
 
 
 
-const AppHeader = styled.div`
-  width: 100%;
-  font-size: 18px; 
-  padding: 10px; 
-  color: black;
-  background-color: #f2f0e6;
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-`;
-
-const Credit = styled.a`
-  font-size: 10px; 
-`;
 
 
 export const App:FC = () => {

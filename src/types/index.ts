@@ -3,6 +3,9 @@ export type Character = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J
 | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' 
 | 'Y' | 'Z'
 
+export type Word = {
+  word: string;
+};
 
   
 export interface Position {
@@ -18,3 +21,4 @@ export interface Column {
 export interface GameBoardState {
   columns: Column[]
 }
+

@@ -1,6 +1,6 @@
 import { FC, useState, useContext, createContext } from "react";
 import {Position, Column,GameBoardState} from '../types'
-import { checkWord, randomLetter } from '../utils'
+import { randomLetter } from '../utils'
 import { ROWS_COUNT, LONG_COLUMN_COUNT,SHORT_COLUMN_COUNT, LONG_COLUMN_INDEXES } from '../constants'
 
 
