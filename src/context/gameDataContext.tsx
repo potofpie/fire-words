@@ -1,11 +1,9 @@
-import { FC, useState, useContext, createContext, useEffect } from "react";
-import {Position, Column,GameBoardState, WordValidationState} from '../types'
-import { randomLetter, validateWord } from '../utils'
+import { FC, useState, useContext, createContext } from "react";
+import {Position, Column,GameBoardState, WordValidationState, Character} from '../types'
+import { randomLetter, validateWord, isTileSelected } from '../utils'
+
 import { ROWS_COUNT, LONG_COLUMN_COUNT,SHORT_COLUMN_COUNT, LONG_COLUMN_INDEXES, DEBUG } from '../constants'
-import {
-  useQuery,
-  QueryStatus
-} from "react-query";
+
 
 
 
@@ -18,6 +16,7 @@ export interface GameDataContextProps {
   appendTile: Function,
   clearTile: Function,
   checkWordLength: Function,
+  flippedSelectedTiles: Function,
   DEBUG: boolean,
   ROWS_COUNT: number[],
   LONG_COLUMN_COUNT: number[],
@@ -63,6 +62,7 @@ export const GameDataProvider:FC = ({ children }) => {
       validateWord(
         selected.map((pos: Position) => pos.letter).join(""),
         setWordValidationState,
+        flippedSelectedTiles,
         clearTile
       );
     }
@@ -84,6 +84,30 @@ export const GameDataProvider:FC = ({ children }) => {
     const ADJACENT_TILE_TAIL = ADJACENT_COL_TAIL && NEAR_ROW
     return SAME_COL_TAIL || ADJACENT_TILE_TAIL
   }
+
+  const flippedSelectedTiles = () => {
+    setGameBoardState( (prevState: GameBoardState, props: any)  => {
+      console.log(prevState)
+      const modifiedColumns = prevState.columns.map((c: Column) => {
+
+
+          const modifiedPoints = c.points.map((p: Position) => {
+            if(isTileSelected({pos: p, selected})){
+              p.letter = randomLetter() as Character
+              return p
+            }
+            return p
+          }
+          )
+          return {points:modifiedPoints} as Column
+        }
+      )
+
+      return {columns : modifiedColumns} as GameBoardState
+    }
+    
+    )
+  } 
 
   const appendTile = (value: any, setError: Function) => {
     setSelected( (prevState: any, props: any)  => {
@@ -110,11 +134,12 @@ export const GameDataProvider:FC = ({ children }) => {
         // status: wordValidationState,
         selectedWord: selected.map((pos: Position) => pos.letter).join(""), 
         score, 
+        wordValidationState,
 
         checkWordLength,
         appendTile, 
         clearTile,
-        wordValidationState,
+        flippedSelectedTiles,
 
         DEBUG,
         gameBoardState,
