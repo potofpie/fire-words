@@ -19,6 +19,7 @@ export const validateWord = async (
   word: string, 
   setWordValidationState: Function, 
   flippedSelectedTiles: Function, 
+  bumpScore: Function, 
   clearTile: Function
   ) => {
 
@@ -32,6 +33,7 @@ export const validateWord = async (
     setWordValidationState( (prevState: WordValidationState, props: any) => { 
 
       if(prevState === 'success'){
+        bumpScore()
         flippedSelectedTiles()
       }
       return 'idle' 

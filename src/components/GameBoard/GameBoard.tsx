@@ -1,7 +1,6 @@
 import {FC, useState, useEffect }from 'react';
 import HeadShake from 'react-reveal/HeadShake';
 import Tada from 'react-reveal/Tada';
-
 import { useSpring } from "react-spring";
 import {
   AiFillCloseCircle,
@@ -20,9 +19,6 @@ import {
   WordText, 
   StyledGameBoard
 } from '../../styled'
-import {
-  QueryStatus
-} from "react-query";
 
 
 
@@ -103,7 +99,7 @@ const LetterTile:FC<LetterTileProps> = ({pos, /*status*/}) => {
 export const GameBoard:FC = () => {
   // const { status, data, error, isFetching } = useWord();
 
-    const  { selected, selectedWord, score, clearTile, gameBoardState, /*status,*/ checkWordLength  } = useGameData()!
+    const  { selected, selectedWord, score, clearTile, gameBoardState, /*status,*/ checkWordLength, bumpScore  } = useGameData()!
 
 
 

@@ -17,6 +17,7 @@ export interface GameDataContextProps {
   clearTile: Function,
   checkWordLength: Function,
   flippedSelectedTiles: Function,
+  bumpScore: Function,
   DEBUG: boolean,
   ROWS_COUNT: number[],
   LONG_COLUMN_COUNT: number[],
@@ -58,11 +59,11 @@ export const GameDataProvider:FC = ({ children }) => {
       }, 500);
     }
     else{
-      console.log(selected.map((pos: Position) => pos.letter).join(""));
       validateWord(
         selected.map((pos: Position) => pos.letter).join(""),
         setWordValidationState,
         flippedSelectedTiles,
+        bumpScore,
         clearTile
       );
     }
@@ -83,6 +84,14 @@ export const GameDataProvider:FC = ({ children }) => {
     const SAME_COL_TAIL = (tail.x === value.x &&  (tail.y-1 === value.y || tail.y+1 === value.y))
     const ADJACENT_TILE_TAIL = ADJACENT_COL_TAIL && NEAR_ROW
     return SAME_COL_TAIL || ADJACENT_TILE_TAIL
+  }
+  const bumpScore = () => {
+    setScore((prevState: number, props: any) => {
+        console.log({prevState, "selected.length": selected.length})
+        console.log(prevState+(100*selected.length) )
+        return  prevState+(100*selected.length) 
+      }
+    )
   }
 
   const flippedSelectedTiles = () => {
@@ -140,6 +149,7 @@ export const GameDataProvider:FC = ({ children }) => {
         appendTile, 
         clearTile,
         flippedSelectedTiles,
+        bumpScore,
 
         DEBUG,
         gameBoardState,
