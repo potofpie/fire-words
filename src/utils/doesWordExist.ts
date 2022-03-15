@@ -23,11 +23,11 @@ export const validateWord = async (
   clearTile: Function
   ) => {
 
-  console.log("wordExists")
+  // console.log("wordExists")
   const wordExists = await loopUpWord(word)
-  console.log(wordExists)
+  // console.log(wordExists)
   wordExists ? setWordValidationState('success') : setWordValidationState('error')
-  console.log(wordExists)
+  // console.log(wordExists)
 
   setTimeout( () => {
     setWordValidationState( (prevState: WordValidationState, props: any) => { 

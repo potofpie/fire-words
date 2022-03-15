@@ -44,7 +44,7 @@ export const GameDataProvider:FC = ({ children }) => {
   const [gameBoardState, setGameBoardState] = useState<any>(generateGameState())!
   const [wordValidationState, setWordValidationState] = useState<WordValidationState>('idle')!
   const [selected, setSelected] = useState<any>([])!
-  const [score, setScore] = useState<any>(100)!
+  const [score, setScore] = useState<any>(0)!
 
 
 
@@ -86,12 +86,7 @@ export const GameDataProvider:FC = ({ children }) => {
     return SAME_COL_TAIL || ADJACENT_TILE_TAIL
   }
   const bumpScore = () => {
-    setScore((prevState: number, props: any) => {
-        console.log({prevState, "selected.length": selected.length})
-        console.log(prevState+(100*selected.length) )
-        return  prevState+(100*selected.length) 
-      }
-    )
+    setScore( score + (100 * selected.length))
   }
 
   const flippedSelectedTiles = () => {
