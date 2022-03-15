@@ -68,10 +68,13 @@ const LetterTile:FC<LetterTileProps> = ({pos, /*status*/}) => {
   const [error, setError] = useState<Boolean>(false);
   const  { selected, appendTile, wordValidationState, DEBUG } = useGameData()!
   const  tileSelected = isTileSelected({pos,selected}) 
+
+
+
   const colorFade = useSpring( 
     {
       backgroundColor:  determineBackgroundColor({error, selected: tileSelected, wordValidationState }),
-      border: tileSelected ? 'solid 3px #e9d66b' : 'solid 3px #f2f0e6'
+      border: tileSelected ? 'solid 3px #e9d66b' : 'solid 3px transparent'
     } 
   )
 
@@ -100,6 +103,12 @@ export const GameBoard:FC = () => {
   // const { status, data, error, isFetching } = useWord();
 
     const  { selected, selectedWord, score, clearTile, gameBoardState, /*status,*/ checkWordLength, bumpScore  } = useGameData()!
+    const fade = useSpring( 
+      {
+        opacity:  selected.length ? 1 : 0
+      } 
+    )
+
 
 
 
@@ -110,7 +119,7 @@ export const GameBoard:FC = () => {
     <>
         <Header>
           {selected.length ?  
-            <WordText>
+            <WordText style={fade}>
               <IconCheckButton onClick={() => checkWordLength()} ><AiFillCheckCircle/></IconCheckButton>
 
               {selectedWord}

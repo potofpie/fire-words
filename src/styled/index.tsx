@@ -19,7 +19,7 @@ width: 100%;
 flex-direction: column;
 justify-content: center;
 `;
-export const WordText = styled.div`
+export const WordText = styled(animated.div)`
 display: flex;
 background-color: #f2f0e6;
 box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
