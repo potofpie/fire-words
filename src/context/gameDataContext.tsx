@@ -12,7 +12,9 @@ export interface GameDataContextProps {
   selectedWord: string,
   score: any
   wordValidationState: WordValidationState,
+  gameOver:boolean,
   gameBoardState: GameBoardState,
+  setGameOver:Function,
   appendTile: Function,
   clearTile: Function,
   checkWordLength: Function,
@@ -45,6 +47,8 @@ export const GameDataProvider:FC = ({ children }) => {
   const [wordValidationState, setWordValidationState] = useState<WordValidationState>('idle')!
   const [selected, setSelected] = useState<any>([])!
   const [score, setScore] = useState<any>(0)!
+  const [gameOver, setGameOver] = useState<boolean>(false)!
+
 
 
 
@@ -139,7 +143,9 @@ export const GameDataProvider:FC = ({ children }) => {
         selectedWord: selected.map((pos: Position) => pos.letter).join(""), 
         score, 
         wordValidationState,
+        gameOver,
 
+        setGameOver,
         checkWordLength,
         appendTile, 
         clearTile,

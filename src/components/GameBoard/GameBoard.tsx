@@ -1,5 +1,9 @@
 import {FC, useState, useEffect }from 'react';
 import HeadShake from 'react-reveal/HeadShake';
+import Pulse from 'react-reveal/Pulse';
+
+// import Shake from 'react-reveal/Shake';
+
 import Tada from 'react-reveal/Tada';
 import { useSpring } from "react-spring";
 import {
@@ -9,6 +13,7 @@ import {
 import { useGameData } from '../../context/gameDataContext'
 import { Column, Position, WordValidationState} from '../../types'
 import { isTileSelected } from '../../utils'
+import {tempColors} from '../../constants'
 import {
   Header, 
   Footer, 
@@ -30,13 +35,15 @@ const determineBackgroundColor = (
   {
     selected, 
     error, 
-    wordValidationState
+    wordValidationState,
+    tempTicker
   }
     : 
     {
       selected: Boolean, 
       error: Boolean, 
-      wordValidationState: WordValidationState
+      wordValidationState: WordValidationState,
+      tempTicker: number
     }
   ) => {
     // console.log(wordValidation, selected)
@@ -46,17 +53,13 @@ const determineBackgroundColor = (
   else if(wordValidationState === 'success' && selected){
     return "#e9ffdb"
   }
-  else if(wordValidationState === 'idle' && selected){
-    return "#f2f0e6" //"#c4d8e2"
-  }
   else{
-    return "#f2f0e6"
+    return tempColors[tempTicker]
   }
 }
 
 interface LetterTileProps {
   pos: Position;
-  // status?: WordValidationState;
 }
 
 
@@ -66,14 +69,31 @@ interface LetterTileProps {
 
 const LetterTile:FC<LetterTileProps> = ({pos, /*status*/}) => {
   const [error, setError] = useState<Boolean>(false);
-  const  { selected, appendTile, wordValidationState, DEBUG } = useGameData()!
+  const [tempTicker, setTempTicker] = useState<number>(0);
+
+  const  { selected, appendTile, wordValidationState, DEBUG, setGameOver } = useGameData()!
   const  tileSelected = isTileSelected({pos,selected}) 
+
+
+  useEffect(() => setTempTicker(0),[pos.letter])
+
+  useEffect(() => {
+    setInterval(() => {
+        tempTicker < 19 && Math.random() < 0.5 && setTempTicker( (prevState: number) => {
+          prevState === 20 && setGameOver(true)
+          return prevState < 20 ? prevState+1 : prevState
+        }
+        )
+      },1000) 
+  },[])
+
+
 
 
 
   const colorFade = useSpring( 
     {
-      backgroundColor:  determineBackgroundColor({error, selected: tileSelected, wordValidationState }),
+      backgroundColor:  determineBackgroundColor({error, selected: tileSelected, wordValidationState, tempTicker }),
       border: tileSelected ? 'solid 3px #e9d66b' : 'solid 3px transparent'
     } 
   )
@@ -85,11 +105,17 @@ const LetterTile:FC<LetterTileProps> = ({pos, /*status*/}) => {
     
     <Tada when={wordValidationState === 'success' && tileSelected} >
       <HeadShake when={ error || (wordValidationState === 'error' && tileSelected)} >
+        <Pulse when={tempTicker > 10} forever={true} >
+
         <AnimatedSquare style={colorFade} key={`${pos.x}, ${pos.y}`} onClick={() => appendTile(pos, setError) }> 
             <div>{pos?.letter}</div> 
+            {DEBUG ? <DebugPos> {tempTicker} </DebugPos>  : <></> }
+
             {DEBUG ? <DebugPos> {`${pos.x}, ${pos.y}`} </DebugPos>  : <></> }
             
         </AnimatedSquare>
+        </Pulse>
+
       </HeadShake>
     </Tada>
   
@@ -102,12 +128,19 @@ const LetterTile:FC<LetterTileProps> = ({pos, /*status*/}) => {
 export const GameBoard:FC = () => {
   // const { status, data, error, isFetching } = useWord();
 
-    const  { selected, selectedWord, score, clearTile, gameBoardState, /*status,*/ checkWordLength, bumpScore  } = useGameData()!
+    const  { selected, selectedWord, score, clearTile, gameBoardState, /*status,*/ checkWordLength, gameOver  } = useGameData()!
     const fade = useSpring( 
       {
         opacity:  selected.length ? 1 : 0
       } 
     )
+
+    const gameFade = useSpring( 
+      {
+        opacity:  gameOver ? 1 : 0
+      } 
+    )
+
 
 
 
@@ -128,14 +161,14 @@ export const GameBoard:FC = () => {
             </WordText>  :  <div style={{margin: 10,height: 33.5}}/>    }
         </Header>
 
-        <StyledGameBoard key='gameboard'>
+         { !gameOver && <StyledGameBoard key='test' >
             {gameBoardState?.columns?.map( 
               (col: Column) =>
                 <div style={{  marginTop: gameBoardState?.columns?.length % 2 === 0 ? 25 : 0}} >
                   {col.points.map((point: Position) => <LetterTile /*status={ status }*/ pos={point} />) }
                 </div>  
-            )  }
-        </StyledGameBoard>
+            )  } 
+        </StyledGameBoard>}
         <Footer>
             <div> {score} </div>
         </Footer>

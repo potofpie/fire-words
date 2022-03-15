@@ -33,7 +33,7 @@ justify-content: center;
 `;
 
 
-export const StyledGameBoard = styled.div`
+export const StyledGameBoard = styled(animated.div)`
 display: flex;
 flex: 5;
 align-items: center;
