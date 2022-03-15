@@ -88,17 +88,12 @@ const LetterTile:FC<LetterTileProps> = ({pos, /*status*/}) => {
   },[])
 
 
-
-
-
   const colorFade = useSpring( 
     {
       backgroundColor:  determineBackgroundColor({error, selected: tileSelected, wordValidationState, tempTicker }),
       border: tileSelected ? 'solid 3px #e9d66b' : 'solid 3px transparent'
     } 
   )
-
-
 
 
   return (
@@ -118,7 +113,6 @@ const LetterTile:FC<LetterTileProps> = ({pos, /*status*/}) => {
 
       </HeadShake>
     </Tada>
-  
 
   )
 
@@ -126,27 +120,17 @@ const LetterTile:FC<LetterTileProps> = ({pos, /*status*/}) => {
 
 
 export const GameBoard:FC = () => {
-  // const { status, data, error, isFetching } = useWord();
-
     const  { selected, selectedWord, score, clearTile, gameBoardState, /*status,*/ checkWordLength, gameOver  } = useGameData()!
     const fade = useSpring( 
       {
         opacity:  selected.length ? 1 : 0
       } 
     )
-
     const gameFade = useSpring( 
       {
         opacity:  gameOver ? 1 : 0
       } 
     )
-
-
-
-
-
-
-
 
     return (
     <>
@@ -161,14 +145,14 @@ export const GameBoard:FC = () => {
             </WordText>  :  <div style={{margin: 10,height: 33.5}}/>    }
         </Header>
 
-         { !gameOver && <StyledGameBoard key='test' >
+         <StyledGameBoard key='test' >
             {gameBoardState?.columns?.map( 
               (col: Column) =>
                 <div style={{  marginTop: gameBoardState?.columns?.length % 2 === 0 ? 25 : 0}} >
                   {col.points.map((point: Position) => <LetterTile /*status={ status }*/ pos={point} />) }
                 </div>  
             )  } 
-        </StyledGameBoard>}
+        </StyledGameBoard>
         <Footer>
             <div> {score} </div>
         </Footer>

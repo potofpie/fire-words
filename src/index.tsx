@@ -10,6 +10,10 @@ import {
 
 const queryClient = new QueryClient()
 
+// window.addEventListener("scroll", (e) => {
+//   e.preventDefault();
+//   window.scrollTo(0, 0);
+// });
 
 ReactDOM.render(
   <React.StrictMode>
