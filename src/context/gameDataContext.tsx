@@ -1,6 +1,7 @@
 import { FC, useState, useContext, createContext } from "react";
+import weightedRandomObject from "weighted-random-object"
 import {Position, Column,GameBoardState, WordValidationState, Character} from '../types'
-import { randomLetter, validateWord, isTileSelected } from '../utils'
+import { letters, validateWord, isTileSelected } from '../utils'
 
 import { ROWS_COUNT, LONG_COLUMN_COUNT,SHORT_COLUMN_COUNT, LONG_COLUMN_INDEXES, DEBUG } from '../constants'
 
@@ -14,10 +15,13 @@ export interface GameDataContextProps {
   wordValidationState: WordValidationState,
   gameOver:boolean,
   gameBoardState: GameBoardState,
+  enabled: boolean
+  setEnabled: Function,
   setGameOver:Function,
   appendTile: Function,
   clearTile: Function,
   checkWordLength: Function,
+  restart: Function,
   flippedSelectedTiles: Function,
   bumpScore: Function,
   DEBUG: boolean,
@@ -31,11 +35,13 @@ export interface GameDataContextProps {
 const generateGameState = () => {
     return {columns: ROWS_COUNT.map( (xIndex: number) => xIndex % 2 !== 0 ? 
         { points : LONG_COLUMN_COUNT.map( (yIndex: number) =>  {  
-          return {x: xIndex, y: yIndex, letter: randomLetter()} as Position 
+          const letter = weightedRandomObject(letters)
+          return {x: xIndex, y: yIndex, letter: letter.value } as Position 
         }) } as Column
         : 
         { points : SHORT_COLUMN_COUNT.map( (yIndex: number) =>  {  
-          return {x: xIndex, y: yIndex, letter: randomLetter()} as Position 
+          const letter = weightedRandomObject(letters)
+          return {x: xIndex, y: yIndex, letter: letter.value} as Position 
         })} as Column
     )
   } as GameBoardState
@@ -48,6 +54,10 @@ export const GameDataProvider:FC = ({ children }) => {
   const [selected, setSelected] = useState<any>([])!
   const [score, setScore] = useState<any>(0)!
   const [gameOver, setGameOver] = useState<boolean>(false)!
+  const [enabled, setEnabled] = useState(false)
+
+
+  const restart = () => setGameBoardState(generateGameState())
 
 
 
@@ -101,7 +111,8 @@ export const GameDataProvider:FC = ({ children }) => {
 
           const modifiedPoints = c.points.map((p: Position) => {
             if(isTileSelected({pos: p, selected})){
-              p.letter = randomLetter() as Character
+              const letter = weightedRandomObject(letters)
+              p.letter = letter.value as Character
               return p
             }
             return p
@@ -151,6 +162,9 @@ export const GameDataProvider:FC = ({ children }) => {
         clearTile,
         flippedSelectedTiles,
         bumpScore,
+        restart,
+        enabled, 
+        setEnabled,
 
         DEBUG,
         gameBoardState,

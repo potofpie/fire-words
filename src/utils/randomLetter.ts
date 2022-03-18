@@ -1,9 +1,29 @@
-export const randomLetter = () => {
-    const vowels = 'AEIOU'
-    const consonants = 'BCDFGHJKLMNPQRSTVWXYZ'
-    const randomCharacter = Math.random() < 0.35 ? vowels[Math.floor(Math.random() * vowels.length)] : consonants[Math.floor(Math.random() * consonants.length)]
-    return randomCharacter
-  }
 
-
-  
+export const letters = [
+  {value: "E", weight:	11.1607},
+  {value: "A", weight:	8.4966},
+  {value: "R", weight:	7.5809},
+  {value: "I", weight:	7.5448},
+  {value: "O", weight:	7.1635},
+  {value: "T", weight:	6.9509},
+  {value: "N", weight:	6.6544},
+  {value: "S", weight:	5.7351},
+  {value: "L", weight:	5.4893},
+  {value: "C", weight:	4.5388},
+  {value: "U", weight:	3.6308},
+  {value: "D", weight:	3.3844},
+  {value: "P", weight:	3.1671},
+  {value: "M", weight:	3.0129},
+  {value: "H", weight:	3.0034},
+  {value: "G", weight:	2.4705},
+  {value: "B", weight:	2.0720},
+  {value: "F", weight:	1.8121},
+  {value: "Y", weight:	1.7779},
+  {value: "W", weight:	1.2899},
+  {value: "K", weight:	1.1016},
+  {value: "V", weight:	1.0074},
+  {value: "X", weight:	0.2902},
+  {value: "Z", weight:	0.2722},
+  {value: "J", weight:	0.1965},
+  {value: "Q", weight:	0.1962}
+]
