@@ -70,12 +70,12 @@ export const LetterTile:FC<LetterTileProps> = ({pos, /*status*/}) => {
 
   const createInterval = () => {
     const interval = setInterval(() => {
-      tempTicker < 19 && Math.random() < 0.35 && setTempTicker( (prevState: number) => {
+      tempTicker < 19 && Math.random() < 0.50 && setTempTicker( (prevState: number) => {
         prevState === 20 && gameOverActions()
         return prevState < 20 ? prevState+1 : prevState
       }
       )
-    },1000) 
+    },2500) 
     return interval
   }
 
