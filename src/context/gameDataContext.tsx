@@ -24,6 +24,8 @@ export interface GameDataContextProps {
   restart: Function,
   flippedSelectedTiles: Function,
   bumpScore: Function,
+  resetScore: Function,
+  resetSelected: Function,
   DEBUG: boolean,
   ROWS_COUNT: number[],
   LONG_COLUMN_COUNT: number[],
@@ -58,12 +60,6 @@ export const GameDataProvider:FC = ({ children }) => {
 
 
   const restart = () => setGameBoardState(generateGameState())
-
-
-
-
-  
-
   const checkWordLength = () => {
     if(selected?.length < 3){
       setWordValidationState('error')
@@ -101,6 +97,13 @@ export const GameDataProvider:FC = ({ children }) => {
   }
   const bumpScore = () => {
     setScore( score + (100 * selected.length))
+  
+  }
+  const resetSelected = () => {
+    setSelected([])
+  }
+  const resetScore = () => {
+    setScore(0)
   }
 
   const flippedSelectedTiles = () => {
@@ -150,22 +153,21 @@ export const GameDataProvider:FC = ({ children }) => {
   return (
     <GameDataContext.Provider value={{ 
         selected,
-        // status: wordValidationState,
         selectedWord: selected.map((pos: Position) => pos.letter).join(""), 
         score, 
         wordValidationState,
         gameOver,
-
         setGameOver,
         checkWordLength,
         appendTile, 
         clearTile,
         flippedSelectedTiles,
         bumpScore,
+        resetScore,
+        resetSelected,
         restart,
-        enabled, 
         setEnabled,
-
+        enabled, 
         DEBUG,
         gameBoardState,
         ROWS_COUNT,

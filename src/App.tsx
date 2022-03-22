@@ -1,8 +1,12 @@
 import {FC }from 'react';
 
-import { GameBoard, StartScreen } from './components'
+import { GameBoard, StartScreen, TutorialGameBoard } from './components'
 import { useGameData} from './context/gameDataContext'
 import {  Credit } from './styled'
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import { TourProvider } from "@reactour/tour";
+import steps from './components/TutorialGameBoard/steps';
+
 
 import {
   BrowserRouter as Router,
@@ -15,13 +19,19 @@ import {
 
 export const App:FC = () => {
   const  { gameBoardState } = useGameData()!
+  const disableBody = (target: any) => disableBodyScroll(target);
+  const enableBody = (target: any) => enableBodyScroll(target);
   return (
     <>
       <Router>
         <Routes>
           
           <Route path='/' element={<StartScreen/>}/>
-          
+          <Route path='/tutorial' element={ gameBoardState ? 
+            <TourProvider steps={steps} defaultOpen afterOpen={disableBody} beforeClose={enableBody}>
+             <TutorialGameBoard /> 
+            </TourProvider>
+             : <></>}/>        
           <Route path='/game' element={ gameBoardState ? <GameBoard /> : <></>}/>
           <Route path='/credits' element={ 
                 <div style={{display: 'flex' , flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
