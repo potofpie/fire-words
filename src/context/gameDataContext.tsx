@@ -24,6 +24,7 @@ export interface GameDataContextProps {
   restart: Function,
   flippedSelectedTiles: Function,
   bumpScore: Function,
+  setScore: Function,
   DEBUG: boolean,
   ROWS_COUNT: number[],
   LONG_COLUMN_COUNT: number[],
@@ -163,9 +164,10 @@ export const GameDataProvider:FC = ({ children }) => {
         flippedSelectedTiles,
         bumpScore,
         restart,
-        enabled, 
         setEnabled,
-
+        setScore,
+        
+        enabled, 
         DEBUG,
         gameBoardState,
         ROWS_COUNT,
