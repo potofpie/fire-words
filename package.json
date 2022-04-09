@@ -16,6 +16,7 @@
     "axios": "^0.26.1",
     "body-scroll-lock": "^4.0.0-beta.0",
     "chroma-js": "^2.4.2",
+    "firebase": "^9.6.10",
     "react": "^17.0.2",
     "react-dnd": "^15.1.1",
     "react-dnd-html5-backend": "^15.1.2",
@@ -34,9 +35,9 @@
     "weighted-random-object": "^1.0.8"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build; ",
-    "deploy": "react-scripts build; firebase deploy;",
+    "start": "env-cmd -f .env react-scripts start",
+    "build": "env-cmd -f .env react-scripts build",
+    "deploy": "npm run build; firebase deploy;",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

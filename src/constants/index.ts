@@ -1,4 +1,7 @@
 import chroma from 'chroma-js'
+
+
+
 export const DICTIONARY_API = 'https://api.dictionaryapi.dev/api/v2/entries/en/'
 export const DEBUG = false
 export const ROWS_COUNT = Array.from(Array(5).keys())
