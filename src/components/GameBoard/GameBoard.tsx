@@ -4,8 +4,11 @@ import Fade from 'react-reveal/Fade';
 import { useSpring } from "react-spring";
 import {
   AiFillCloseCircle,
-  AiFillCheckCircle 
+  AiFillCheckCircle,
+  AiOutlineQuestionCircle 
 } from 'react-icons/ai'
+
+import {useNavigate } from "react-router-dom";
 import { useGameData } from '../../context/gameDataContext'
 import { Column, Position } from '../../types'
 import { Modal } from '../Modal'
@@ -24,6 +27,8 @@ import {
 
 
 export const GameBoard:FC = () => {
+    let navigate = useNavigate();
+
     const  { selected, selectedWord, score, clearTile, gameBoardState, /*status,*/ checkWordLength, gameOver  } = useGameData()!
     const fade = useSpring( 
       {
@@ -35,16 +40,16 @@ export const GameBoard:FC = () => {
     return (
     <>
         <Fade top>
-          <AppHeader  >Fire Words </AppHeader>
+          
+          <AppHeader>   <AiOutlineQuestionCircle style={{color: "#f2f0e6"}}/> <div>Fire Words</div>  <AiOutlineQuestionCircle onClick={() => navigate('/tutorial')}/> </AppHeader>
+          
           </Fade>
 
           <Header >
             {selected.length ?  
               <WordText style={fade}>
                 <IconCheckButton onClick={() => checkWordLength()} ><AiFillCheckCircle/></IconCheckButton>
-
                 {selectedWord}
-                
                 <IconCrossButton onClick={() => clearTile() } ><AiFillCloseCircle/></IconCrossButton>
               </WordText>  :  <div style={{margin: 10,height: 33.5}}/>    }
           </Header>

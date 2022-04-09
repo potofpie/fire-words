@@ -9,7 +9,9 @@ import Fade from 'react-reveal/Fade';
 export const StartScreen:FC = () => {
     return (
 
-        <Link style={{display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center'}} to={'/game'}> 
+        <Link 
+            style={{display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center'}} 
+            to={ localStorage.getItem('tutorial') ? '/game' : '/tutorial'}> 
         <Fade>
         <div style={{display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'center'}}> 
             <div style={{display: 'flex', flexDirection: 'row',  justifyContent: 'center'}}>

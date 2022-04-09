@@ -92,7 +92,10 @@ color: grey;
 
 
 
-export const AppHeader = styled.div`
+export const AppHeader = styled.div`  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
   font-size: 18px; 
   padding: 10px; 

@@ -40,7 +40,7 @@ export const TutorialGameBoard:FC = () => {
     <>
 
         <Fade top>
-          <AppHeader  >Fire Words </AppHeader>
+          <AppHeader style={{justifyContent:'center'}} >Fire Words </AppHeader>
           </Fade>
 
           <Header >

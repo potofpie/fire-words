@@ -85,7 +85,7 @@ export const TutorialRoute:FC = () => {
     steps={createSteps()} 
     afterOpen={disableBody} 
     beforeClose={enableBody}
-    onClickClose={() => navigate('game')}
+    onClickClose={ async () =>  { await localStorage.setItem('tutorial', 'true'); await navigate('/game') } }
     showBadge={false}
     showCloseButton={true}
   >
@@ -103,7 +103,6 @@ export const TutorialRoute:FC = () => {
         <Router>
           <Routes>
             
-            <Route path='/' element={<StartScreen/>}/>
             <Route path='/tutorial' element={ gameBoardState ? <TutorialRoute/> : <></>}/>
             <Route path='/game' element={ gameBoardState ? <GameBoard /> : <></>}/>
             <Route path='/credits' element={ 
@@ -113,6 +112,8 @@ export const TutorialRoute:FC = () => {
                     <Credit href="https://www.macworld.com/article/196032/firewords.html" title="letters abc icons">This game was base on the orginal Fire Words</Credit>
                   </div>
             } />
+                        <Route path='/' element={<StartScreen/>}/>
+
                 <Route
                   path="*"
                   element={<Navigate to="/" />}
