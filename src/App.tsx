@@ -51,11 +51,11 @@ const createSteps = () => {
     },
     {
       selector: '[data-tut="selected_word"]',
-      content: 'Now try yo submit SO'
+      content: 'Now try to submit SO'
     },
     {
       selector: '#root',
-      content: 'As you can see this word was rejected because 2 letter words dont count!'
+      content: 'As you can see this word was rejected because 2 letter words do not count!'
     },
     {
       selector: '[data-tut="21"]',
@@ -67,7 +67,7 @@ const createSteps = () => {
     },
     {
       selector: '[data-tut="14"]',
-      content: 'You are ready to start! Press the X up there ^'
+      content: 'You are ready to start! Press the X at the top of this window!'
     },
   ]
   return steps
