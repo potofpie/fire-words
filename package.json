@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.9.0",
     "@headlessui/react": "^1.5.0",
+    "@reactour/tour": "^2.10.2",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.3",
     "@testing-library/user-event": "^13.5.0",
@@ -12,6 +14,7 @@
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.13",
     "axios": "^0.26.1",
+    "body-scroll-lock": "^4.0.0-beta.0",
     "chroma-js": "^2.4.2",
     "react": "^17.0.2",
     "react-dnd": "^15.1.1",
@@ -56,6 +59,7 @@
     ]
   },
   "devDependencies": {
+    "@types/body-scroll-lock": "^3.1.0",
     "@types/chroma-js": "^2.1.3",
     "@types/weighted-random-object": "^1.0.0",
     "autoprefixer": "^10.4.3",
