@@ -29,21 +29,36 @@ export interface GameDataContextProps {
   ROWS_COUNT: number[],
   LONG_COLUMN_COUNT: number[],
   SHORT_COLUMN_COUNT: number[]
+}
+
+
+const getAgecentTiles = ({pos,selected, gameBoardState} : {pos:Position,selected:any[],  gameBoardState:GameBoardState}) => {
+    const { x , y } = pos
+    console.log({x , y})
+    console.log(gameBoardState.columns[x])
+
 
 }
-// const SHORT_COLUMN_INDEXES = [0,2,4]
 
 const generateGameState = () => {
-    return {columns: ROWS_COUNT.map( (xIndex: number) => xIndex % 2 !== 0 ? 
-        { points : LONG_COLUMN_COUNT.map( (yIndex: number) =>  {  
-          const letter = weightedRandomObject(letters)
-          return {x: xIndex, y: yIndex, letter: letter.value } as Position 
-        }) } as Column
+    return {columns: ROWS_COUNT.map( (xIndex: number) => 
+      xIndex % 2 !== 0 ? 
+        { 
+          points : LONG_COLUMN_COUNT.map( (yIndex: number) =>  {  
+            console.log({})
+            const letter = weightedRandomObject(letters);
+            return { x: xIndex, y: yIndex, letter: letter.value } as Position ;
+          }) 
+        } as Column
         : 
-        { points : SHORT_COLUMN_COUNT.map( (yIndex: number) =>  {  
-          const letter = weightedRandomObject(letters)
-          return {x: xIndex, y: yIndex, letter: letter.value} as Position 
-        })} as Column
+        { 
+          points : SHORT_COLUMN_COUNT.map( (yIndex: number) =>  {  
+            console.log({})
+            const letter = weightedRandomObject(letters);
+            return { x: xIndex, y: yIndex, letter: letter.value} as Position ;
+
+          })
+       } as Column
     )
   } as GameBoardState
 }
@@ -108,8 +123,6 @@ export const GameDataProvider:FC = ({ children }) => {
     setGameBoardState( (prevState: GameBoardState, props: any)  => {
       console.log(prevState)
       const modifiedColumns = prevState.columns.map((c: Column) => {
-
-
           const modifiedPoints = c.points.map((p: Position) => {
             if(isTileSelected({pos: p, selected})){
               const letter = weightedRandomObject(letters)
@@ -151,7 +164,6 @@ export const GameDataProvider:FC = ({ children }) => {
   return (
     <GameDataContext.Provider value={{ 
         selected,
-        // status: wordValidationState,
         selectedWord: selected.map((pos: Position) => pos.letter).join(""), 
         score, 
         wordValidationState,
@@ -166,6 +178,7 @@ export const GameDataProvider:FC = ({ children }) => {
         restart,
         setEnabled,
         setScore,
+
         
         enabled, 
         DEBUG,
@@ -174,6 +187,11 @@ export const GameDataProvider:FC = ({ children }) => {
         SHORT_COLUMN_COUNT,
         LONG_COLUMN_COUNT
       }}>
+      {getAgecentTiles({
+          pos: {x:1,y:1, letter: 'G'} as Position,
+          selected,
+          gameBoardState
+        })}
       {children}
     </GameDataContext.Provider>
   );
