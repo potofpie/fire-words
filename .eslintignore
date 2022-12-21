@@ -1,0 +1,6 @@
+tests/*
+tests-examples/*
+src/services/scheduledWork/*
+react-app-env.d.ts
+reportWebVitals.ts
+playwright.config.ts

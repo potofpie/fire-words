@@ -1,10 +1,8 @@
 import {FC }from 'react';
-
 import { GameBoard, StartScreen, TutorialGameBoard } from './components'
 import { useGameData} from './context/gameDataContext'
 import {  Credit } from './styled'
 import { TourProvider } from '@reactour/tour'
-
 import {
   BrowserRouter as Router,
   Routes,
