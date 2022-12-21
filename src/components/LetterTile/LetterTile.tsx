@@ -6,7 +6,7 @@ import { useSpring } from "react-spring";
 import { useGameData } from '../../context/gameDataContext'
 import {  Position, WordValidationState} from '../../types'
 import { isTileSelected } from '../../utils'
-import {tempColors} from '../../constants'
+import {tempColors, ERROR, GREEN} from '../../constants'
 import {
   AnimatedSquare, 
   DebugPos, 
@@ -35,10 +35,10 @@ const determineBackgroundColor = (
   ) => {
     // console.log(wordValidation, selected)
   if(error || (wordValidationState === 'error' && selected) ) {
-    return "#e8ccd7"
+    return ERROR
   }
   else if(wordValidationState === 'success' && selected){
-    return "#e9ffdb"
+    return GREEN
   }
   else{
     return tempColors[tempTicker]
