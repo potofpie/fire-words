@@ -1,5 +1,6 @@
 import {FC }from 'react';
 import { GameBoard, StartScreen, TutorialGameBoard } from './components'
+import { TestGameBoard } from './components/TutorialGameBoard/TestGameBoard'
 import { useGameData} from './context/gameDataContext'
 import {  Credit } from './styled'
 import { TourProvider } from '@reactour/tour'
@@ -102,6 +103,7 @@ export const TutorialRoute:FC = () => {
           <Routes>
             
             <Route path='/tutorial' element={ gameBoardState ? <TutorialRoute/> : <></>}/>
+            <Route path='/test' element={ gameBoardState ? <TestGameBoard />  : <></>}/>
             <Route path='/game' element={ gameBoardState ? <GameBoard /> : <></>}/>
             <Route path='/credits' element={ 
                   <div style={{display: 'flex' , flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>

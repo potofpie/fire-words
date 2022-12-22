@@ -13,7 +13,18 @@ def strip(w: str):
 def empty_dict():
     return {"total": 0}
 
-def re_answer(_answer: dict, word: str, letter: str, w_index: int,  cursor: int, depth):
+def re_normalize(_answer: dict):
+    total_of_keys = sum([_answer[k]['total'] for k in _answer if k != "total"])  
+    for k in _answer:
+        if k == 'total':
+            continue
+        _answer[k]['total'] = _answer[k]['total']/total_of_keys
+        if len(_answer[k].keys()) > 1:
+            re_normalize(_answer[k])
+            
+
+
+def re_answer(_answer: dict, word: str, letter: str, w_index: int,  cursor: int, depth: int):
     if(not letter in _answer):
         _answer[letter] = {"total": 0}
     _answer[letter]['total'] += 1
@@ -42,6 +53,9 @@ def main(input, depth):
         cursor = 0
         for index, l in enumerate(w):
             re_answer(answer, w, l, index, cursor, depth)
+    
+    re_normalize(answer)
+    
     
     with open("output.json", "w") as outfile:
         json.dump(answer, outfile)
