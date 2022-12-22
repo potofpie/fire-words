@@ -33,7 +33,7 @@ export interface GameDataContextProps {
 
 
 const getAgecentTiles = ({pos,selected, gameBoardState} : {pos:Position,selected:any[],  gameBoardState:GameBoardState}) => {
-    const { x , y } = pos
+    // const { x , y } = pos
 
 }
 
@@ -61,26 +61,26 @@ const generateGameState = () => {
 
 
 
-const generateGameState2 = () => {
-  return {columns: ROWS_COUNT.map( (xIndex: number) => 
-    xIndex % 2 !== 0 ? 
-      { 
-        points : LONG_COLUMN_COUNT.map( (yIndex: number) =>  {  
-          const letter = weightedRandomObject(letters);
-          return { x: xIndex, y: yIndex, letter: letter.value } as Position ;
-        }) 
-      } as Column
-      : 
-      { 
-        points : SHORT_COLUMN_COUNT.map( (yIndex: number) =>  {  
-          const letter = weightedRandomObject(letters);
-          return { x: xIndex, y: yIndex, letter: letter.value} as Position ;
+// const generateGameState2 = () => {
+//   return {columns: ROWS_COUNT.map( (xIndex: number) => 
+//     xIndex % 2 !== 0 ? 
+//       { 
+//         points : LONG_COLUMN_COUNT.map( (yIndex: number) =>  {  
+//           const letter = weightedRandomObject(letters);
+//           return { x: xIndex, y: yIndex, letter: letter.value } as Position ;
+//         }) 
+//       } as Column
+//       : 
+//       { 
+//         points : SHORT_COLUMN_COUNT.map( (yIndex: number) =>  {  
+//           const letter = weightedRandomObject(letters);
+//           return { x: xIndex, y: yIndex, letter: letter.value} as Position ;
 
-        })
-     } as Column
-  )
-} as GameBoardState
-}
+//         })
+//      } as Column
+//   )
+// } as GameBoardState
+// }
 
 export const GameDataContext = createContext<GameDataContextProps| undefined >(undefined);
 export const GameDataProvider:FC = ({ children }) => {

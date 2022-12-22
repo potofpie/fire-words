@@ -37,6 +37,7 @@
   "scripts": {
     "start": "env-cmd -f .env react-scripts start",
     "build": "env-cmd -f .env react-scripts build",
+    "build:ci": "react-scripts build",
     "lint": "eslint",
     "deploy": "npm run build; firebase deploy;",
     "test": "react-scripts test",

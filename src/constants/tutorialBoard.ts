@@ -1,4 +1,3 @@
-import {Position} from '../types'
 export const TUTORIAL_BOARD = {
     "columns": [
         {

@@ -44,7 +44,7 @@ export const GameBoard:FC = () => {
       reset
       
       ()
-    }, [gameOver])
+    }, [gameOver, setScore])
 
 
 
