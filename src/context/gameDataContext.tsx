@@ -34,9 +34,6 @@ export interface GameDataContextProps {
 
 const getAgecentTiles = ({pos,selected, gameBoardState} : {pos:Position,selected:any[],  gameBoardState:GameBoardState}) => {
     const { x , y } = pos
-    console.log({x , y})
-    console.log(gameBoardState.columns[x])
-
 
 }
 
@@ -45,7 +42,6 @@ const generateGameState = () => {
       xIndex % 2 !== 0 ? 
         { 
           points : LONG_COLUMN_COUNT.map( (yIndex: number) =>  {  
-            console.log({})
             const letter = weightedRandomObject(letters);
             return { x: xIndex, y: yIndex, letter: letter.value } as Position ;
           }) 
@@ -53,7 +49,6 @@ const generateGameState = () => {
         : 
         { 
           points : SHORT_COLUMN_COUNT.map( (yIndex: number) =>  {  
-            console.log({})
             const letter = weightedRandomObject(letters);
             return { x: xIndex, y: yIndex, letter: letter.value} as Position ;
 
@@ -61,6 +56,30 @@ const generateGameState = () => {
        } as Column
     )
   } as GameBoardState
+}
+
+
+
+
+const generateGameState2 = () => {
+  return {columns: ROWS_COUNT.map( (xIndex: number) => 
+    xIndex % 2 !== 0 ? 
+      { 
+        points : LONG_COLUMN_COUNT.map( (yIndex: number) =>  {  
+          const letter = weightedRandomObject(letters);
+          return { x: xIndex, y: yIndex, letter: letter.value } as Position ;
+        }) 
+      } as Column
+      : 
+      { 
+        points : SHORT_COLUMN_COUNT.map( (yIndex: number) =>  {  
+          const letter = weightedRandomObject(letters);
+          return { x: xIndex, y: yIndex, letter: letter.value} as Position ;
+
+        })
+     } as Column
+  )
+} as GameBoardState
 }
 
 export const GameDataContext = createContext<GameDataContextProps| undefined >(undefined);
@@ -71,15 +90,7 @@ export const GameDataProvider:FC = ({ children }) => {
   const [score, setScore] = useState<any>(0)!
   const [gameOver, setGameOver] = useState<boolean>(false)!
   const [enabled, setEnabled] = useState(false)
-
-
   const restart = () => setGameBoardState(generateGameState())
-
-
-
-
-  
-
   const checkWordLength = () => {
     if(selected?.length < 3){
       setWordValidationState('error')
