@@ -95,16 +95,16 @@ export const TutorialRoute:FC = () => {
 }
 
   export const App:FC = () => {
-    const  { gameBoardState } = useGameData()!
+    // const  { gameBoardState } = useGameData()!
 
     return (
       <>
         <Router>
           <Routes>
             
-            <Route path='/tutorial' element={ gameBoardState ? <TutorialRoute/> : <></>}/>
-            <Route path='/test' element={ gameBoardState ? <TestGameBoard />  : <></>}/>
-            <Route path='/game' element={ gameBoardState ? <GameBoard /> : <></>}/>
+            {/* <Route path='/tutorial' element={ gameBoardState ? <TutorialRoute/> : <></>}/> */}
+            <Route path='/test' element={  <TestGameBoard /> }/>
+            {/* <Route path='/game' element={ gameBoardState ? <GameBoard /> : <></>}/> */}
             <Route path='/credits' element={ 
                   <div style={{display: 'flex' , flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
                   Credits:

@@ -1,6 +1,6 @@
 import { FC, useState, useContext, createContext } from "react";
 import weightedRandomObject from "weighted-random-object"
-import {Position, Column,GameBoardState, WordValidationState, Character} from '../types'
+import {Position, Column, GameBoardState, WordValidationState, Character} from '../types'
 import { letters, validateWord, isTileSelected } from '../utils'
 
 import { ROWS_COUNT, LONG_COLUMN_COUNT,SHORT_COLUMN_COUNT, LONG_COLUMN_INDEXES, DEBUG } from '../constants'
@@ -126,6 +126,8 @@ export const GameDataProvider:FC = ({ children }) => {
     const ADJACENT_TILE_TAIL = ADJACENT_COL_TAIL && NEAR_ROW
     return SAME_COL_TAIL || ADJACENT_TILE_TAIL
   }
+
+  
   const bumpScore = () => {
     setScore( score + (100 * selected.length))
   }

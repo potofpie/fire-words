@@ -1,5 +1,5 @@
-import {FC }from 'react';
-import {TutorialLetterTile} from '../TutorialLetterTile';
+import {FC, useEffect, useMemo, useState }from 'react';
+import {LetterTile} from '../LetterTile2';
 import Fade from 'react-reveal/Fade';
 import { useSpring } from "react-spring";
 import {
@@ -23,6 +23,7 @@ import {
   AppHeader
 } from '../../styled'
 import probabilities from '../../output.json'  
+import { Position, Character } from '../../types';
 
 
 
@@ -35,16 +36,20 @@ const  weightedRand2 = (probabilities: any)  => {
 }
 
 
-const  generateBoard = () => {
-  const [p1,p2,p3]  = lodash.range(3).map(() => {
-    const x = lodash.random(7)
-    const xIsEven = (x + 1) % 2 === 0
-    const y = xIsEven ? lodash.random(8) : lodash.random(7) ;
-    return {
-      y,
-      x,
-      letter: weightedRand2(probabilities)
+const generateBoard = () => {
+  console.log("weo")
 
+  const [p1,p2,p3]  = lodash.range(3).map(() => {
+    const x = lodash.random(4)
+    const xIsEven = (x + 1) % 2 === 0
+    const y = xIsEven ? lodash.random(6) : lodash.random(5);
+    const letter = weightedRand2(probabilities) ?? ' '
+
+
+    return {
+      x,
+      y,
+      letter
     }
   })
   return [p1,p2,p3];
@@ -54,64 +59,48 @@ const  generateBoard = () => {
 } 
 
 
+
 export const TestGameBoard:FC = () => {
+      const thing = useMemo(generateBoard,[])
+      return (
+      <>
+                <div className='flex flex-row bg-red-500'>
+                {console.log('=======')}
+                {lodash.range(5).map((x) => {
+                  const isOdd = (x + 1) % 2 ? true : false;
+                  return (
+                    <div className={`flex flex-col bg-blue-500 ml-2 ${isOdd ? 'mt-8' : 'mt-1'  }`}>
+                      {x}
+                      {lodash.range(isOdd ? 6 : 7 ).map((y) => {
 
-    const b =generateBoard() 
-    console.log(b)
+                          const l = thing.filter((item) => item.x === x &&  item.y === y)
+                          if(l.length){
+                            console.log({l})
+                          }
+                          if(l.length > 0 && x === l[0].x  && y === l[0].y ) {
+                            // console.log(l[0].letter)
+                            return <div className='h-10 w-10 bg-purple-500 m-2 text-green-500'>
+                              <div>{l[0].x},{l[0].y}</div> 
+                              
+                            <div>{l[0].letter} {console.log(l[0].letter)}</div>
+                            </div>  
+                          }
 
+                          else {
+                            return <div className='h-10 w-10 bg-purple-500 m-2'>
+                              <div>{x},{y}</div> 
+                            </div>  
+                          }
 
-    const { setIsOpen } = useTour();
-    setIsOpen(true)
-
-    const  { selected, selectedWord, score, clearTile, checkWordLength  } = useGameData()!
-    const fade = useSpring( 
-      {
-        opacity:  selected.length ? 1 : 0
-      } 
-    )
-
-
-    return (
-    <>
-
-        <Fade top>
-          <AppHeader style={{justifyContent:'center'}} >Fire Words </AppHeader>
-          </Fade>
-
-          <Header >
-            {selected.length ?  
-              <WordText data-tut={"selected_word"} style={fade}>
-                <IconCheckButton onClick={() => checkWordLength()} ><AiFillCheckCircle/></IconCheckButton>
-
-                {selectedWord}
-                
-                <IconCrossButton onClick={() => clearTile() } ><AiFillCloseCircle/></IconCrossButton>
-              </WordText>  :  <div style={{margin: 10,height: 33.5}}/>    }
-          </Header>
-          <Modal />
-
-          <StyledGameBoard key='test' >
-            <Fade >  
-              {EMPTY_BOARD?.columns?.map( 
-                (col: any, cindex: number) =>
-                <div style={{  marginTop: TUTORIAL_BOARD?.columns?.length % 2 === 0 ? 25 : 0}} >
-                    {col.points.map((point: any, pindex: number) => {
-                        const p = b.filter(e => 
-                            e.x  === point.x && e.y === point.y
-                          )
-                        return <TutorialLetterTile  pos={p.length ? p[0] : point } />
-                    }
-                    ) }
-                  </div>  
-              )  } 
-          </Fade>
-          </StyledGameBoard> 
-            <Footer>
-              <Fade>
-                <div> {score} </div>
-              </Fade>
-            </Footer>
-    </>
-    );
+                        } 
+                      )}
+                    </div>
+                  ) 
+                  }
+                )  
+                } 
+                </div > 
+      </>
+      );
 }
 

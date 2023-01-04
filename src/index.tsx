@@ -36,11 +36,11 @@ const queryClient = new QueryClient()
 
 ReactDOM.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <GameDataProvider>
+    {/* <QueryClientProvider client={queryClient}> */}
+      {/* <GameDataProvider> */}
         <App />
-      </GameDataProvider>
-    </QueryClientProvider>
+      {/* </GameDataProvider> */}
+    {/* </QueryClientProvider> */}
   </React.StrictMode>,
   document.getElementById('root')
 );
