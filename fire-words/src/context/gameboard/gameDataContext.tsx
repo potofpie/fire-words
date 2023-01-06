@@ -1,7 +1,8 @@
-import { FC, PropsWithChildren, useState, useContext, createContext, useReducer } from "react";
+import { FC, PropsWithChildren, useMemo, useContext, createContext, useReducer } from "react";
 import { GameboardState, } from '../../utils/gameboard/types' 
 import { EMPTY_BOARD } from '../../constants'
 import { reducer, GameboardActions } from "./actions"; 
+import { generateBoard } from "../../utils/gameboard/generateBoard"; 
 
 
 export interface GameDataContextProps {
@@ -13,9 +14,10 @@ export interface GameDataContextProps {
 export const GameboardContext = createContext<GameDataContextProps| undefined >(undefined);
 export const GameboardContextProvider:FC<PropsWithChildren> = ({ children }) => {
   const initialState: GameboardState  = {
-      gameboard: EMPTY_BOARD,
+      gameboard: generateBoard(),
       selected: []
     }
+  console.log({initialState})
   const [gameBoardState, dispatchGameboardAction] = useReducer(reducer,initialState)
 
   return (

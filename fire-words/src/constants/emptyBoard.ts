@@ -1,3 +1,20 @@
+const generateEmptyColumn = (x: number) => {
+    const isLong = ((x+1)%2) != 0;
+    const tiles =  Array.from({ length: isLong ? 6 : 7 }).map((_,y) => ({ 
+        x,
+        y, 
+        letter: ' ',
+        selected: false
+    }))
+    return {tiles};
+}
+const generateEmptyBoard = () => {
+    const columns = Array.from({ length: 5 }).map((_,x) => generateEmptyColumn(x))
+    return {columns}
+};
+
+export const _EMPTY_BOARD = generateEmptyBoard();
+
 export const EMPTY_BOARD = {
   columns: [
       {

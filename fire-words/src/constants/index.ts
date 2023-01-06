@@ -1,7 +1,6 @@
 export * from './emptyBoard'
-
 import chroma from 'chroma-js'
-
+import { TileData, Gameboard } from '../utils/gameboard'
 
 
 export const DICTIONARY_API = 'https://api.dictionaryapi.dev/api/v2/entries/en/'
