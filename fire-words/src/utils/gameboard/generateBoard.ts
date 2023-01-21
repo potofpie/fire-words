@@ -6,6 +6,8 @@ import probz from '../../probabilities/output.json'
 import { getRandomLetterFromWeights } from './getRandomLetterFromWeights'
 
 
+
+const isFirstOrLast = (tile: TileData, isLong: boolean) => tile.y == 0 || tile.y ==  (isLong ? 5 : 6)
 const hasUpperNeighbor = (tile: TileData) => tile.y != 0
 const hasDownwardNeighbor = (tile: TileData, isLong: boolean) => tile.y !=  (isLong ? 5 : 6)
 
@@ -18,18 +20,32 @@ const hasRightNeighbor = (tile: TileData) => tile.x !=  4
 const findNeighbors  = (board: Gameboard, tile: TileData): TileData[] => {
     const neighbors: TileData[] = [];
     const isLong = LONG_COLUMN_INDEXES.includes(tile.x);
+
+
+    // console.log({tile})
     if(hasUpperNeighbor(tile)){
         neighbors.push(board.columns[tile.x].tiles[tile.y-1])
     }
     if(hasDownwardNeighbor(tile, isLong)){
         neighbors.push(board.columns[tile.x].tiles[tile.y+1])
     }
+
     if(hasLeftNeighbor(tile)){
       neighbors.push(board.columns[tile.x-1].tiles[tile.y])
+      if(isLong){
+
+      }
     } 
     if(hasRightNeighbor(tile)){
+      if(isLong){
         neighbors.push(board.columns[tile.x+1].tiles[tile.y])
+      }
+      else {
+        neighbors.push(board.columns[tile.x+1].tiles[tile.y])
+        neighbors.push(board.columns[tile.x+1].tiles[tile.y+1])
+      }
     } 
+
     return neighbors;
   }
 
@@ -52,11 +68,11 @@ const zipProbabilities = (p1: any, p2: any ) => {
       probs[key] = p2[key]
     }
     else {
-      probs[key] =  (probs[key]  + p2[key])/1
+      probs[key] =  (probs[key]  + p2[key])/2
     }
 
   })
-  console.log({probs})
+  // console.log({probs})
   return probs
 }
 
@@ -64,11 +80,14 @@ const zipProbabilities = (p1: any, p2: any ) => {
 type Letter = 'a'
 const walkAndGenerate = (_gameboard: Gameboard, tile: TileData): Gameboard => {
   const gameboard = {..._gameboard}
-  findNeighbors(gameboard, tile).forEach((t) => {
+  const ns = findNeighbors(gameboard, tile)
+  console.log({ns})
+  ns.forEach((t) => {
     if(t.letter == ' '){
-      const nsOfBlank = findNeighbors(gameboard, tile).filter((tile) => tile.letter != ' ' );
+      const nsOfBlank = findNeighbors(gameboard, t).filter((_t) => _t.letter != ' ' );
+      console.log({nsOfBlank})
       const averagedProbs = nsOfBlank.reduce((prev, next) => {
-        const letter = next.letter as Letter;
+        const letter = next.letter.toLowerCase() as Letter;
         const letterProbs = probz[letter]
         return zipProbabilities(prev, letterProbs)
       },{})
@@ -83,7 +102,7 @@ const walkAndGenerate = (_gameboard: Gameboard, tile: TileData): Gameboard => {
     //   walkAndGenerate(gameboard,tile);
     // }
   })
-  console.log({gameboard})
+  // console.log({gameboard})
   return gameboard;
 }
 
@@ -94,6 +113,7 @@ export const generateBoard = (): Gameboard => {
   const seedTiles = getSeedTiles()
   const columns = Array.from({ length: 5 }).map((_,x) => generateColumn(x, seedTiles))
   const board = {columns} 
-  console.log(seedTiles[0])
+  // console.log(seedTiles[0])
+  console.log(findNeighbors(board,seedTiles[0]))
   return walkAndGenerate(board,seedTiles[0])
 };
