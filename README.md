@@ -5,7 +5,7 @@
 # fire words
 A clone of a old iPhone app from 2008-2009 as a mothers day gift. 
 
-[Play now!](fire-words-e41fa.web.app/)
+[Play now!](http://fire-words-e41fa.web.app/)
 
 # Credits and Sources
 - The frequency of the letters of the alphabet in English - [Source](https://www3.nd.edu/~busiforc/handouts/cryptography/letterfrequencies.html)
