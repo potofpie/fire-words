@@ -1,18 +1,21 @@
-import axios from "axios";
-import {DICTIONARY_API} from "../constants";
 import { WordValidationState } from "../types";
 
+let wordsDict: Record<string, boolean> | null = null;
 
-const validateStatus = (status: number) =>  status === 200 || status === 404
+const loadDictionary = async (): Promise<Record<string, boolean>> => {
+  if (wordsDict) return wordsDict;
+  
+  const response = await fetch('/words.json');
+  wordsDict = await response.json();
+  return wordsDict as Record<string, boolean>;
+}
 
 const loopUpWord = async (word: string): Promise<Boolean> => {
-    const { status } = await axios.get(
-      `${DICTIONARY_API}${word}`,
-      {
-        validateStatus
-      }
-    );
-    return status === 200;
+    const dict = await loadDictionary();
+    const lookup = word.toLowerCase();
+    const exists = dict[lookup] === true;
+    console.log('Looking up word:', word, '-> normalized:', lookup, '-> exists:', exists);
+    return exists;
   }
 
 export const validateWord = async (
@@ -23,11 +26,10 @@ export const validateWord = async (
   clearTile: Function
   ) => {
 
-  // console.log("wordExists")
+  console.log("Validating word:", word);
   const wordExists = await loopUpWord(word)
-  // console.log(wordExists)
+  console.log("Word exists:", wordExists);
   wordExists ? setWordValidationState('success') : setWordValidationState('error')
-  // console.log(wordExists)
 
   setTimeout( () => {
     setWordValidationState( (prevState: WordValidationState, props: any) => { 
